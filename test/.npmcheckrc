@@ -1,0 +1,4 @@
+{
+  "skipUnused": true,
+  "ignore": ["lodash"]
+}

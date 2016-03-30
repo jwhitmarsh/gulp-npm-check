@@ -1,0 +1,27 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "node": 1,
+    "es6": 1,
+    "mocha": 1
+  },
+  "extends": "google",
+  "rules": {
+    "max-len": [2, 180, 4, {
+      "ignoreComments": true,
+      "ignoreUrls": true
+    }],
+    "valid-jsdoc": [2, {
+      "requireReturn": false,
+      "requireReturnDescription": false,
+      "requireParamDescription": false
+    }],
+    "spaced-comment": 0,
+    "no-use-before-define": 0,
+    "no-var": 2,
+    "generator-star-spacing": 0,
+    "radix": [2, "as-needed"],
+    "object-curly-spacing": 0,
+    "arrow-parens": 0
+  }
+}

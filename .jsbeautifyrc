@@ -1,0 +1,12 @@
+{
+  "indent_size": 2,
+  "indent_char": " ",
+  "indent_level": 0,
+  "indent_with_tabs": 0,
+  "preserve_newlines": 1,
+  "max_preserve_newlines": 2,
+  "wrap_line_length": 120,
+  "end_with_newline": 1,
+  "space_after_anon_function": 0,
+  "brace_style": "collapse-preserve-inline"
+}
