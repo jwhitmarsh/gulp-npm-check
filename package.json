@@ -18,7 +18,8 @@
     "babel-runtime": "^6.6.1",
     "findup-sync": "^0.3.0",
     "lodash": "^2.4.2",
-    "npm-check": "^4.1.4"
+    "npm-check": "^4.1.4",
+    "gulp-util": "^3.0.7"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.0",
@@ -33,7 +34,6 @@
     "gulp-babel": "^6.1.2",
     "gulp-eslint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
-    "gulp-util": "^3.0.7",
     "run-sequence": "^1.1.5"
   }
 }
