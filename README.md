@@ -6,3 +6,11 @@ include a .npmcheckrc that looks like
   "ignore": ["lodash"]
 }
 ```
+
+## usage
+```
+const npmcheck = require('gulp-npm-check');
+gulp.task('deps', function(cb) {
+  npmcheck(cb);
+});
+```
