@@ -3,7 +3,12 @@ import { PluginError, log } from 'gulp-util';
 import findup from 'findup-sync';
 import { dirname } from 'path';
 import { readFileSync } from 'fs';
+import { omit } from 'lodash';
 
+/**
+ * Default method
+ * @param  {Function} cb callback
+ */
 export default function(cb) {
   try {
     let config = {};
@@ -15,7 +20,7 @@ export default function(cb) {
     }
 
     // do the check
-    check(config)
+    check(omit(config, 'ignore'))
       .then(results => {
         // turn it into an array
         results = Object.keys(results).map(r => {
