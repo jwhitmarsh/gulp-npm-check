@@ -22,10 +22,13 @@ export default function(cb) {
     // do the check
     check(omit(config, 'ignore'))
       .then(results => {
+        results = results.get('packages');
+
         // turn it into an array
         results = Object.keys(results).map(r => {
           return results[r];
         });
+
         // get the mismatch packages
         results = results.filter(p => p.bump);
 
@@ -36,10 +39,10 @@ export default function(cb) {
         if (results.length) {
           throw new PluginError('gulp-npm-check', {
             name: 'NpmCheckError',
-            message: `Out of date packages: ${results.map(p => p.moduleName)}`
+            message: `Out of date packages: \n${results.map(p => moduleInfo(p)).join('\n')}`
           });
         } else {
-          log('All packages are up to date :)');
+          log('All packages are up to dates :)');
         }
 
         cb(0);
@@ -48,4 +51,13 @@ export default function(cb) {
   } catch (e) {
     throw new PluginError('gulp-npm-check', e, { showStack: 1 });
   }
+}
+
+/**
+ * get descriptive module info
+ * @param  {[type]} module [description]
+ * @return {[type]}        [description]
+ */
+function moduleInfo(module) {
+  return `\t${module.moduleName} (installed: ${module.installed}, latest: ${module.latest})`;
 }
