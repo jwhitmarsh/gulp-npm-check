@@ -1,3 +1,6 @@
+# gulp-npm-check
+gulp wrapper around [npm-check](https://github.com/dylang/npm-check)
+
 ## config
 include a .npmcheckrc that looks like
 ```
