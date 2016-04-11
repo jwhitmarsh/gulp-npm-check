@@ -5,17 +5,35 @@ gulp wrapper around [npm-check](https://github.com/dylang/npm-check)
 `npm install -D gulp-npm-check`
 
 ## Config
-The library uses a config file, á la eslint/babel - simply include an .npmcheckrc that matches the config [npm-check](https://github.com/dylang/npm-check) accepts, like:
+The library can a config file, á la eslint/babel - simply include an `.npmcheckrc` that matches the config [npm-check](https://github.com/dylang/npm-check) accepts, like:
 
 ```
 {
   "skipUnused": true, // default is false
   "ignoreDev": true, // default is false
-  "ignore": ["lodash"]
 }
 ```
 
-There is an additional config option `ignore`. This is for when you have to pin a version that you don't want to update (or receive warnings about updating) and accepts a string array of the module names (as they appear in your dependancies list).
+Or the config can be supplied to the function call, comme:
+```
+npmcheck({ skipUnused: true }, function(err){...});
+```
+
+Or, you can use both - in which case the inline config object with extend the `.npmcheckrc`
+
+There are addtional config options:
+
+**ignore**
+
+Type: `String[]`
+
+Modules to ignore if there is a version mismatch. This is for if you've had to pin a version and you don't want the plugin to throw if the latest isn't installed.
+
+**throw**
+
+Type: `Bool` - Default: `true`
+
+If `true` the plugin will throw an error if there are any module mismatches, otherwise it'll just write to stdout (`gutil.log`).
 
 ## Usage
 ```
@@ -26,5 +44,4 @@ gulp.task('deps', function(cb) {
 ```
 
 ## Roadmap
-* Currently this always throws an error if npm-check finds modules that are out of date. I want to make this configurable to warn rather than throw
 * Allow for custom reporters
