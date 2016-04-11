@@ -1,26 +1,32 @@
-import check from 'npm-check';
-import { PluginError, log } from 'gulp-util';
-import findup from 'findup-sync';
 import { dirname } from 'path';
+import { extend, omit } from 'lodash';
+import { PluginError, log, colors } from 'gulp-util';
 import { readFileSync } from 'fs';
-import { omit } from 'lodash';
+import check from 'npm-check';
+import findup from 'findup-sync';
 
 /**
  * Default method
+ * @param  {!config} config object
  * @param  {Function} cb callback
  */
-export default function(cb) {
+export default function(config, cb) {
   try {
-    let config = {};
+    // check what params we've got
+    if (typeof config === 'function') {
+      cb = config;
+      config = {};
+    }
 
     // get the rc file if there is one
     let rcfile = findup('.npmcheckrc', { cwd: dirname(module.parent.filename) });
     if (rcfile) {
-      config = JSON.parse(readFileSync(rcfile));
+      let rc = JSON.parse(readFileSync(rcfile));
+      config = extend(rc, config); // inline config takes priority over rcfile
     }
 
     // do the check
-    check(omit(config, 'ignore'))
+    check(omit(config, ['ignore', 'throw']))
       .then(results => {
         results = results.get('packages');
 
@@ -32,20 +38,14 @@ export default function(cb) {
         // get the mismatch packages
         results = results.filter(p => p.bump);
 
+        // check if we have modules to ignore and filter accordingly
         if (config.ignore && config.ignore.length) {
           results = results.filter(p => !config.ignore.includes(p.moduleName));
         }
 
-        if (results.length) {
-          throw new PluginError('gulp-npm-check', {
-            name: 'NpmCheckError',
-            message: `Out of date packages: \n${results.map(p => moduleInfo(p)).join('\n')}`
-          });
-        } else {
-          log('All packages are up to dates :)');
-        }
+        handleMismatch(results, config);
 
-        cb(0);
+        cb();
       })
       .catch(cb);
   } catch (e) {
@@ -60,4 +60,25 @@ export default function(cb) {
  */
 function moduleInfo(module) {
   return `\t${module.moduleName} (installed: ${module.installed}, latest: ${module.latest})`;
+}
+
+/**
+ * do things with results
+ * @param  {array} results results from npm-check
+ * @param  {config} config object
+ */
+function handleMismatch(results, config) {
+  if (results.length) {
+    let message = `Out of date packages: \n${results.map(p => moduleInfo(p)).join('\n')}`;
+    if (config.throw === undefined || config.throw !== undefined && config.throw) {
+      throw new PluginError('gulp-npm-check', {
+        name: 'NpmCheckError',
+        message: message
+      });
+    } else {
+      log(colors.yellow('gulp-npm-check\n', message));
+    }
+  } else {
+    log('All packages are up to date :)');
+  }
 }
